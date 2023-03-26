@@ -33,6 +33,8 @@ option(IV_ENABLE_SHARED "Build libraries shared or static" OFF)
 option(IV_ENABLE_X11_DYNAMIC "dlopen X11 after launch" OFF)
 # Use only if X11 API changes (Uses very brittle script).
 option(IV_ENABLE_X11_DYNAMIC_MAKE_HEADERS "Remake the X11 dynamic .h files." OFF)
+# Use system TIFF library
+option(IV_ENABLE_TIFF_SHARED "Build against system TIFF library" OFF)
 
 # =============================================================================
 # CMake build settings
@@ -103,6 +105,12 @@ if (IV_ENABLE_X11_DYNAMIC_MAKE_HEADERS)
   if (NOT X11_FOUND)
     message(FATAL_ERROR "Cannot IV_ENABLE_X11_DYNAMIC_MAKE_HEADERS without X11 installed")
   endif()
+endif()
+
+find_package(TIFF)
+
+if (IV_ENABLE_TIFF_SHARED AND NOT TIFF_FOUND)
+    message(FATAL_ERROR "Use of system TIFF library requested, but library not installed")
 endif()
 
 # =============================================================================

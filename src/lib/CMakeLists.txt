@@ -361,7 +361,6 @@ if(NOT IV_WINDOWS_BUILD)
 	    ${DISPATCH_SOURCE_FILES}
 	    ${IV26_SOURCE_FILES}
 	    ${INTERVIEWS_SOURCE_FILES}
-	    ${TIFF_SOURCE_FILES}
 	    ${OS_SOURCE_FILES}
 	    ${IVX11_SOURCE_FILES})
 else()
@@ -378,6 +377,10 @@ if(IV_ENABLE_X11_DYNAMIC)
         COMPILE_DEFINITIONS "IVX11_DYNAM")
 endif()
 
+if(NOT IV_ENABLE_TIFF_SHARED)
+    list(APPEND INTERVIEWS_SOURCES ${TIFF_SOURCE_FILES})
+endif()
+
 if(NOT IV_WINDOWS_BUILD)
   set(KIT_DEFINES "-Dmotif_kit -Dsgi_motif_kit -Dopenlook_kit -Dbw_kit -Ddefault_kit=SMFKit")
 else()
@@ -386,7 +389,9 @@ endif()
 
 set(DIV_DEFINES "-DIV_LIBALL='\"${CMAKE_INSTALL_PREFIX}/share\"' -DX_LIBDIR='\"${X11_LIBRARY_DIR}\"'")
 
-set_source_files_properties(${TIFF_SOURCE_FILES} PROPERTIES COMPILE_FLAGS ${TIFF_DEFINES})
+if(NOT IV_ENABLE_TIFF_SHARED)
+    set_source_files_properties(${TIFF_SOURCE_FILES} PROPERTIES COMPILE_FLAGS ${TIFF_DEFINES})
+endif()
 
 set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/InterViews/dialogs.cpp
                             ${CMAKE_CURRENT_SOURCE_DIR}/InterViews/kit.cpp
