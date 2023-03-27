@@ -29,8 +29,13 @@
 
 #include <InterViews/color.h>
 #include <InterViews/raster.h>
-#include <InterViews/tiff.h>
+#ifdef TIFF_INCLUDE_DIR
+#include <tiff.h>
+#include <tiffio.h>
+#else
+#include <TIFF/tiff.h>
 #include <TIFF/tiffio.h>
+#endif
 #include <stdlib.h>
 
 #if !defined(howmany)

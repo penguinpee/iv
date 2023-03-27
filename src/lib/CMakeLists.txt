@@ -350,7 +350,11 @@ set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/TIFF/mkg3states.c
                             ${TIFF_DEFINES})
 
 add_executable(mkg3states ${CMAKE_CURRENT_SOURCE_DIR}/TIFF/mkg3states.c)
-target_include_directories(mkg3states PUBLIC ${IV_PROJECT_SOURCE_DIR}/src/include/TIFF)
+if(NOT IV_ENABLE_TIFF_SHARED)
+    target_include_directories(mkg3states PUBLIC ${IV_PROJECT_SOURCE_DIR}/src/include/TIFF)
+else()
+    target_include_directories(mkg3states PUBLIC ${TIFF_INCLUDE_DIR})
+endif()
 
 # =============================================================================
 # interviews IV library
@@ -409,10 +413,14 @@ if (IV_ENABLE_X11_DYNAMIC)
 else()
     target_link_libraries(interviews ${X11_LIBRARIES})
 endif()
-target_include_directories(interviews
+if(NOT IV_ENABLE_TIFF_SHARED)
+    target_include_directories(interviews
                            PRIVATE ${X11_INCLUDE_DIR}
                                    $<BUILD_INTERFACE:${IV_PROJECT_SOURCE_DIR}/src/include/TIFF>
                                    $<INSTALL_INTERFACE:include/TIFF>)
+else()
+    target_link_libraries(interviews tiff tiffio)
+endif()
 set_property(TARGET interviews PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if(IV_WINDOWS_BUILD)
